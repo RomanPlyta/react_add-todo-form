@@ -10,6 +10,7 @@ export interface Todo {
   title: string;
   completed: boolean;
   userId: number;
+  user?: User;
 }
 
 export interface User {
@@ -33,11 +34,22 @@ export const App: React.FC = () => {
       return;
     }
 
+    const newId = todos.length
+      ? Math.max(...todos.map(todo => todo.id)) + 1
+      : 1;
+
+    const selectedUser = usersFromServer.find(user => user.id === userId);
+
+    if (!selectedUser) {
+      throw new Error('User not found');
+    }
+
     const newTodo: Todo = {
-      id: todos.length ? todos[todos.length - 1].id + 1 : 1,
+      id: newId,
       title,
       completed: false,
       userId,
+      user: selectedUser,
     };
 
     setTodos([...todos, newTodo]);
@@ -56,7 +68,14 @@ export const App: React.FC = () => {
           <input
             type="text"
             value={title}
-            onChange={e => setTitle(e.target.value)}
+            onChange={e => {
+              const cleaned = e.target.value.replace(
+                /[^a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9\s]/g,
+                '',
+              );
+
+              setTitle(cleaned);
+            }}
             data-cy="titleInput"
             placeholder="Enter a title"
           />

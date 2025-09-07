@@ -29,7 +29,11 @@ export const TodoInfo: React.FC<Props> = ({ todo, users }) => {
       className={`TodoInfo ${todo.completed ? 'TodoInfo--completed' : ''}`}
     >
       <h2 className="TodoInfo__title">{todo.title}</h2>
-      <UserInfo user={author} />
+      {author ? (
+        <UserInfo user={author} />
+      ) : (
+        <span className="TodoInfo__no-user">No user found</span>
+      )}
     </article>
   );
 };
