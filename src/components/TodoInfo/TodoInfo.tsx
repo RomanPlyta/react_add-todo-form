@@ -6,6 +6,7 @@ export interface Todo {
   title: string;
   completed: boolean;
   userId: number;
+  user?: User;
 }
 
 export interface User {
@@ -17,20 +18,18 @@ export interface User {
 
 type Props = {
   todo: Todo;
-  users: User[];
 };
 
-export const TodoInfo: React.FC<Props> = ({ todo, users }) => {
-  const author = users.find(user => user.id === todo.userId);
-
+export const TodoInfo: React.FC<Props> = ({ todo }) => {
   return (
     <article
       data-id={todo.id}
       className={`TodoInfo ${todo.completed ? 'TodoInfo--completed' : ''}`}
     >
       <h2 className="TodoInfo__title">{todo.title}</h2>
-      {author ? (
-        <UserInfo user={author} />
+
+      {todo.user ? (
+        <UserInfo user={todo.user} />
       ) : (
         <span className="TodoInfo__no-user">No user found</span>
       )}

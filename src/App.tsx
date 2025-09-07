@@ -20,6 +20,11 @@ export interface User {
   email: string;
 }
 
+const preparedTodos: Todo[] = todosFromServer.map(todo => ({
+  ...todo,
+  user: usersFromServer.find(user => user.id === todo.userId),
+}));
+
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>(todosFromServer);
   const [title, setTitle] = useState('');
@@ -110,7 +115,7 @@ export const App: React.FC = () => {
         </button>
       </form>
 
-      <TodoList todos={todos} users={usersFromServer} />
+      <TodoList todos={preparedTodos} />
     </div>
   );
 };
